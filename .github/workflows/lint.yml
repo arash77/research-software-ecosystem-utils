@@ -3,8 +3,23 @@ name: Lint and Format
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run Ruff Check
+        uses: astral-sh/ruff-action@v3
+        continue-on-error: true
+
+      - name: Run Ruff Formatter
+        run: ruff format --check
+        continue-on-error: true
   auto-format:
     runs-on: ubuntu-latest
     permissions:
@@ -14,12 +29,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Run Ruff Check
+      - name: Set up Ruff
         uses: astral-sh/ruff-action@v3
-        continue-on-error: true
+        with:
+          args: --version
 
-      - name: Run Ruff Format
-        run: ruff format .
+      - name: Lint
+        run: ruff check --fix --unsafe-fixes
+
+      - name: Format
+        run: ruff format
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
