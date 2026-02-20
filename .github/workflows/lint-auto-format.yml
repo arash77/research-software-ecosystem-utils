@@ -17,7 +17,7 @@ jobs:
       - name: Run Ruff Check and Fix
         uses: astral-sh/ruff-action@v3
         with:
-          args: check --fix --output-format=full 2>&1 | tee /tmp/ruff-remaining.txt || true
+          args: check --fix --unsafe-fixes --output-format=full 2>&1 | tee /tmp/ruff-remaining.txt || true
 
       - name: Run Ruff Format
         run: ruff format
