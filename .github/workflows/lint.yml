@@ -43,17 +43,12 @@ jobs:
 
       - name: Build PR body
         run: |
-          body="Automated PR to apply \`ruff check --fix\` and \`ruff format\` to the codebase."
+          printf 'Automated PR to apply `ruff check --fix` and `ruff format` to the codebase.' > /tmp/pr-body.txt
           if [ -s /tmp/ruff-remaining.txt ]; then
-            body="$body
-
-## Remaining errors that require manual fixes
-
-\`\`\`
-$(cat /tmp/ruff-remaining.txt)
-\`\`\`"
+            printf '\n\n## Remaining errors that require manual fixes\n\n```\n' >> /tmp/pr-body.txt
+            cat /tmp/ruff-remaining.txt >> /tmp/pr-body.txt
+            printf '```\n' >> /tmp/pr-body.txt
           fi
-          echo "$body" > /tmp/pr-body.txt
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
