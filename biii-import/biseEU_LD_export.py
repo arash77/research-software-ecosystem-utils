@@ -804,3 +804,5 @@ def get_software_list(connection):
 
 if __name__ == "__main__":
     main()
+import os
+x   =   1
