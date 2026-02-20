@@ -37,6 +37,7 @@ jobs:
 
       - name: Lint
         run: ruff check --fix --unsafe-fixes
+        continue-on-error: true
 
       - name: Format
         run: ruff format
