@@ -1,0 +1,31 @@
+name: Lint and Format
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run Ruff Check
+        uses: astral-sh/ruff-action@v3
+        continue-on-error: true
+
+      - name: Run Ruff Format
+        run: ruff format .
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "style: auto-format Python code with ruff"
+          title: "style: auto-format Python code with ruff"
+          body: "Automated PR to apply `ruff format` to the codebase."
+          branch: ruff-auto-format
+          delete-branch: true
