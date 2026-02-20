@@ -1,26 +1,11 @@
-name: Lint and Format
+name: Lint Auto-Format
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Run Ruff Check
-        uses: astral-sh/ruff-action@v3
-
-      - name: Run Ruff Formatter
-        run: ruff format --check
-
   auto-format:
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -29,14 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Install Ruff
+      - name: Run Ruff Check and Fix
         uses: astral-sh/ruff-action@v3
         with:
-          args: --version
-
-      - name: Run Ruff Check and Fix
-        run: |
-          ruff check --fix --unsafe-fixes --output-format=full 2>&1 | tee /tmp/ruff-remaining.txt || true
+          args: check --fix --output-format=full 2>&1 | tee /tmp/ruff-remaining.txt || true
 
       - name: Run Ruff Format
         run: ruff format
@@ -54,7 +35,7 @@ jobs:
         uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "style: apply ruff lint fixes and formatting"
-          title: "style: apply ruff lint fixes and formatting"
+          title: "Apply ruff lint fixes and formatting"
           body-path: /tmp/pr-body.txt
           branch: ruff-auto-format
           delete-branch: true

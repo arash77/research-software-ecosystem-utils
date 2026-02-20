@@ -1,0 +1,18 @@
+name: Lint Check
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run Ruff Check
+        uses: astral-sh/ruff-action@v3
+
+      - name: Run Ruff Formatter
+        run: ruff format --check
