@@ -16,13 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Ruff
-        uses: astral-sh/ruff-action@v3
-        with:
-          args: "version"
+      - name: Install Ruff
+        run: pipx install ruff
 
-      - name: Setup Reviewdog
-        uses: reviewdog/action-setup@v1
+      - uses: reviewdog/action-setup@v1
 
       - name: Run Ruff Linter
         env:
