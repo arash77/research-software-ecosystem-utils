@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Ruff Check and Fix
         run: |
-          ruff check --fix --unsafe-fixes --output-format=text 2>&1 | tee /tmp/ruff-remaining.txt || true
+          ruff check --fix --unsafe-fixes --output-format=full 2>&1 | tee /tmp/ruff-remaining.txt || true
 
       - name: Run Ruff Format
         run: ruff format
