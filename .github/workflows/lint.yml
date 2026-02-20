@@ -29,20 +29,38 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Run Ruff Check and Fix
+      - name: Install Ruff
         uses: astral-sh/ruff-action@v3
         with:
-          args: check --fix --unsafe-fixes
-        continue-on-error: true
+          args: --version
+
+      - name: Run Ruff Check and Fix
+        run: |
+          ruff check --fix --unsafe-fixes --output-format=text 2>&1 | tee /tmp/ruff-remaining.txt || true
 
       - name: Run Ruff Format
         run: ruff format
 
+      - name: Build PR body
+        run: |
+          body="Automated PR to apply \`ruff check --fix\` and \`ruff format\` to the codebase."
+          if [ -s /tmp/ruff-remaining.txt ]; then
+            body="$body
+
+## Remaining errors that require manual fixes
+
+\`\`\`
+$(cat /tmp/ruff-remaining.txt)
+\`\`\`"
+          fi
+          echo "$body" > /tmp/pr-body.txt
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
+          token: ${{ secrets.PAT_TOKEN }}
           commit-message: "style: apply ruff lint fixes and formatting"
           title: "style: apply ruff lint fixes and formatting"
-          body: "Automated PR to apply `ruff check --fix` and `ruff format` to the codebase."
+          body-path: /tmp/pr-body.txt
           branch: ruff-auto-format
           delete-branch: true
