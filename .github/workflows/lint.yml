@@ -15,11 +15,10 @@ jobs:
 
       - name: Run Ruff Check
         uses: astral-sh/ruff-action@v3
-        continue-on-error: true
 
       - name: Run Ruff Formatter
         run: ruff format --check
-        continue-on-error: true
+
   auto-format:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -30,16 +29,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Set up Ruff
+      - name: Run Ruff Check and Fix
         uses: astral-sh/ruff-action@v3
         with:
-          args: --version
-
-      - name: Lint
-        run: ruff check --fix --unsafe-fixes
+          args: check --fix --unsafe-fixes
         continue-on-error: true
 
-      - name: Format
+      - name: Run Ruff Format
         run: ruff format
 
       - name: Create Pull Request
