@@ -45,8 +45,9 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
-          commit-message: "style: auto-format Python code with ruff"
-          title: "style: auto-format Python code with ruff"
-          body: "Automated PR to apply `ruff format` to the codebase."
+          token: ${{ secrets.PAT_TOKEN }}
+          commit-message: "style: apply ruff lint fixes and formatting"
+          title: "style: apply ruff lint fixes and formatting"
+          body: "Automated PR to apply `ruff check --fix` and `ruff format` to the codebase."
           branch: ruff-auto-format
           delete-branch: true
