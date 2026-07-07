@@ -4,15 +4,16 @@ from rdflib import ConjunctiveGraph
 from tabulate import tabulate
 
 
-def get_bioschemas_files_in_repo():
+def get_biocontainers_files_in_repo():
     tools = []
-    for data_file in glob.glob(r"../../content/data/*/*.bioschemas.jsonld"):
+    for data_file in glob.glob(r"../../content/data/*/*.biocontainers.jsonld"):
+        # print(data_file)
         filename_ext = os.path.basename(data_file).split(".")
         if len(filename_ext) == 3 and filename_ext[2] == "jsonld":
             tools.append(data_file)
     print(f"found {len(tools)} bioschemas descriptors")
     with open(
-        "../../content/datasets/biotools_bioschemas_files_list.txt",
+        "../../content/datasets/biocontainers_bioschemas_files_list.txt",
         "w",
         encoding="utf-8",
     ) as f:
@@ -23,10 +24,9 @@ def get_bioschemas_files_in_repo():
 
 def process_tools():
     """
-    Go through all bio.tools entries in bioschemas JSON-LD and produce an single RDF file.
+    Go through all biocontainers entries in bioschemas JSON-LD and produce an single RDF file.
     """
-    tool_files = get_bioschemas_files_in_repo()
-    print(len(tool_files))
+    tool_files = get_biocontainers_files_in_repo()
     rdf_graph = ConjunctiveGraph()
 
     for tool_file in tool_files:
@@ -35,7 +35,7 @@ def process_tools():
 
     rdf_graph.serialize(
         format="turtle",
-        destination="../../content/datasets/bioschemas-dump.ttl",
+        destination="../../content/datasets/biocontainers-dump.ttl",
         # destination=os.path.join(directory, tpe_id + "bioschemas.jsonld")
     )
 
