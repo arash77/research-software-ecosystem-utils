@@ -59,7 +59,7 @@ def rdfize(data) -> Graph:
 
     triples = ""
 
-    biotools_id = getBiotoolsIdFromDebian(data)
+    getBiotoolsIdFromDebian(data)
     dois = getCitationFromDebian(data)
     description = getDescriptionFromDebian(data)
 
@@ -87,30 +87,36 @@ def rdfize(data) -> Graph:
             triples += f'{package_uri} schema:citation "{doi}" .\n'
 
         # process identifiers
-       #if "registries" in data.keys():
-          #  for e in data["registries"]:
-             #   if "name" in e.keys() and "entry" in e.keys():
-                #    id = f"{e['name'].lower()}:{e['entry']}"
-                 #   triples += f'{package_uri} schema:identifier "{id}" .\n'
+        # if "registries" in data.keys():
+        #  for e in data["registries"]:
+        #   if "name" in e.keys() and "entry" in e.keys():
+        #    id = f"{e['name'].lower()}:{e['entry']}"
+        #   triples += f'{package_uri} schema:identifier "{id}" .\n'
 
-    # process identifiers
+        # process identifiers
         if "registries" in data.keys():
             for e in data["registries"]:
                 if "name" in e.keys() and "entry" in e.keys():
                     if e["entry"] == "atac, meryl" and e["name"] == "conda:bioconda":
                         print("test")
                         for id in e["entry"].split(", "):
-                            triples += f'{package_uri} schema:identifier bioconda:{id} .\n'
+                            triples += (
+                                f"{package_uri} schema:identifier bioconda:{id} .\n"
+                            )
                 if e["name"] == "bio.tools":
-                    triples += f'{package_uri} schema:identifier biotools:{e["entry"].lower()} .\n'
-                #elif e["name"] == "OMICtools":
-                    #continue
+                    triples += f"{package_uri} schema:identifier biotools:{e['entry'].lower()} .\n"
+                # elif e["name"] == "OMICtools":
+                # continue
                 elif e["name"] == "conda:bioconda" and e["entry"] != "atac, meryl":
-                    triples += f'{package_uri} schema:identifier bioconda:{e["entry"]} .\n'
+                    triples += (
+                        f"{package_uri} schema:identifier bioconda:{e['entry']} .\n"
+                    )
                 elif e["name"] == "SciCrunch":
-                    triples += f'{package_uri} schema:identifier scicrunch:{e["entry"]} .\n'
+                    triples += (
+                        f"{package_uri} schema:identifier scicrunch:{e['entry']} .\n"
+                    )
                 elif e["name"] == "guix":
-                    triples += f'{package_uri} schema:identifier guix:{e["entry"]} .\n'
+                    triples += f"{package_uri} schema:identifier guix:{e['entry']} .\n"
                 else:
                     triples += f'{package_uri} schema:identifier "{e["name"].lower()}:{e["entry"]}" .\n'
 
